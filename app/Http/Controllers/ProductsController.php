@@ -41,6 +41,7 @@ class ProductsController extends Controller
         return response(["answer"=>"Update successfully", "product"=>$product], 200);
     }
 
+    
     public function deleteProduct($identifier){
         $product = products::query()->where("identifier_id", $identifier)->delete();
         return response(["answer"=>"Deleted successfully asin: {$identifier}"], 200);
