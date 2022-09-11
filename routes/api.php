@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\CartsController;
 
 #Login
 Route::prefix('user/')->group(static function () {
@@ -22,8 +23,14 @@ Route::group(['middleware' => ["auth:sanctum"] ], function() {
         Route::put("{identifier}", [ProductsController::class, 'updateProduct']);
         Route::delete('{identifier}', [ProductsController::class, 'deleteProduct']);
     });
-});
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    #cart
+    Route::prefix('cart/')->group(static function () {
+        Route::prefix('products/')->group(static function () {
+                Route::get('', [CartsController::class, 'getProducts']);
+                Route::post('', [CartsController::class, 'addProduct']);
+                Route::delete('/{externalId}', [CartsController::class, 'deleteProduct']);
+            });
+        Route::post('checkout', [CartsController::class, 'checkout']);
+    });
+    
 });
