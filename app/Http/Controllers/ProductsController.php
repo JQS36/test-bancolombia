@@ -4,25 +4,40 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\products;
+use App\Managers\ProductsManager;
 
 class ProductsController extends Controller
 {
+
+    public function __construct(
+        private readonly ProductsManager $productsManager
+    ){}
+
     public function getProducts(){
+        $products = $this->productsManager->getAllProducts();
         return response()->json([
             "State" => 1,
-            "Products" => products::all()
+            "Msg" => "All products",
+            "Products" => $products
         ],200);
     }
 
-    public function getProduct($identifier){
-        $product = products::query()->where("identifier_id", $identifier)->first();
+    public function getProduct(string $identifierId){
+        $product = $this->productsManager->getProduct($identifierId);
         if(is_null($product)){
             return response()->json([
                 "State" => 0,
                 'Msg' => 'Product not found'
             ],404); 
         }
-        return response()->json([ "State"=>1, "Product"=>$product],200);
+        return response()->json([ 
+            "State" => 1,
+            "Product" => [
+                "name" => $product->name,
+                "Asin" => $product->identifier_id,
+                "Stock" => $product->stock,
+                "Price" => $product->price]
+        ],200);
     }
 
     public function addProduct(Request $request){
@@ -31,7 +46,7 @@ class ProductsController extends Controller
                 'name' => 'string|required',
                 'identifier_id'  => 'string|max:32|required'
             ]);
-            $product = products::create($request->all());
+            $product = $this->productsManager->createProduct($request);
         } catch (\Throwable $th) {
             return ["Fix"=>$th->getMessage()];
         }
