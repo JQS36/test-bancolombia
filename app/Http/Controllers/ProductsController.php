@@ -27,7 +27,7 @@ class ProductsController extends Controller
 
     public function addProduct(Request $request){
         try {
-            $productData = $request->validate([
+            $request->validate([
                 'name' => 'string|required',
                 'identifier_id'  => 'string|max:32|required'
             ]);

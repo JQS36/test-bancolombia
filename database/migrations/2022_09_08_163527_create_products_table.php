@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('identifier_id', 255)->unique();
             $table->unsignedInteger('stock')->default(0);
             $table->string('currency_code', 3)->default('USD');
-            $table->unsignedInteger('price')->default(0);
+            $table->decimal('price', 20,2)->default(0);
             $table->timestamps();
         });
     }
