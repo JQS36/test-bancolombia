@@ -28,7 +28,6 @@ class CartsController extends Controller
             return response()->json(["State"=>0, "Answer"=>"Quantity is greather than stock available, Stock available is: {$product["stock"]}", "User"=>$user->name]);
         }
         $this->cartManager->saveCartProducts($cart->id, $product->id, $productData['qty']);
-        $this->cartManager->addProduct($cart, $product, $productData['qty']);
         return response()->json(["State"=>1, "Answer"=>"Add product successfully", "User"=>$user->name, "Cart"=>$cart->id]);
     }
 
